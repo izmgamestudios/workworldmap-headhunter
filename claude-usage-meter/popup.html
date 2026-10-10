@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Usage Meter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Claude Kullanım</h1>
+      <button id="refresh" title="Şimdi yenile" aria-label="Şimdi yenile">↻</button>
+    </header>
+    <main id="meters" aria-live="polite"></main>
+    <p id="status" class="status"></p>
+    <footer>
+      <a href="https://claude.ai/settings/usage" target="_blank" rel="noopener">Tüm kullanım detayları →</a>
+    </footer>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Usage Meter",
+  "version": "1.0.0",
+  "description": "Claude.ai Pro kullanım kotalarını (5 saatlik oturum + haftalık limit) anlık olarak gösterir.",
+  "permissions": ["storage", "alarms", "notifications"],
+  "host_permissions": ["https://claude.ai/*"],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_title": "Claude Usage Meter",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "claude-usage-meter@izmgamestudios",
+      "strict_min_version": "121.0"
+    }
+  }
+}
