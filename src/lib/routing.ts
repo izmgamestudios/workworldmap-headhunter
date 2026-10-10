@@ -1,7 +1,6 @@
 import type { Place, RouteResult } from '../types';
 import { haversine } from './geo';
-
-const OSRM = 'https://router.project-osrm.org';
+import { routeUrl } from './api';
 
 const coords = (stops: Place[]) => stops.map((s) => `${s.lng.toFixed(6)},${s.lat.toFixed(6)}`).join(';');
 
@@ -9,8 +8,7 @@ const coords = (stops: Place[]) => stops.map((s) => `${s.lng.toFixed(6)},${s.lat
 export async function routeByRoad(stops: Place[], signal?: AbortSignal): Promise<RouteResult> {
   if (stops.length < 2) return { geometry: [], legs: [], distance: 0, duration: 0, road: true };
   try {
-    const url = `${OSRM}/route/v1/driving/${coords(stops)}?overview=full&geometries=geojson&steps=false`;
-    const res = await fetch(url, { signal });
+    const res = await fetch(routeUrl('route', coords(stops)), { signal });
     if (!res.ok) throw new Error(`OSRM ${res.status}`);
     const data = await res.json();
     if (data.code !== 'Ok' || !data.routes?.[0]) throw new Error(data.message ?? data.code);
@@ -49,8 +47,7 @@ function straightFallback(stops: Place[]): RouteResult {
  */
 export async function optimizeOrder(stops: Place[]): Promise<Place[]> {
   if (stops.length < 3) return stops;
-  const url = `${OSRM}/trip/v1/driving/${coords(stops)}?source=first&roundtrip=false&geometries=geojson&overview=false`;
-  const res = await fetch(url);
+  const res = await fetch(routeUrl('trip', coords(stops)));
   if (!res.ok) throw new Error(`OSRM ${res.status}`);
   const data = await res.json();
   if (data.code !== 'Ok') throw new Error(data.message ?? data.code);

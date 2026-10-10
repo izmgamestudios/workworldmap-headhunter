@@ -1,0 +1,20 @@
+name = "teknodoz-hmap-proxy"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Comma-separated list of origins allowed to call the proxy (CORS). Use your real app origin(s).
+ALLOWED_ORIGINS = "http://localhost:5173,http://localhost:4173"
+# Public demo servers: fine for development. For production point OSRM_URL at your own OSRM instance.
+OSRM_URL = "https://router.project-osrm.org"
+NOMINATIM_URL = "https://nominatim.openstreetmap.org"
+# Nominatim usage policy requires an identifying User-Agent with contact info.
+USER_AGENT = "teknodoz-hmap-proxy/0.1 (contact: set-your-email@example.com)"
+
+# Optional per-IP rate limit (Cloudflare Workers Rate Limiting binding). Remove if unused.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+  [ratelimits.simple]
+  limit = 60
+  period = 60
