@@ -1,6 +1,13 @@
 import type { Place } from '../types';
 
-export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+// UUIDs so records can sync to Supabase (places.id is uuid) without remapping
+export const uid = () =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      });
 
 export const validCoord = (lat: number, lng: number) =>
   Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 && !(lat === 0 && lng === 0);

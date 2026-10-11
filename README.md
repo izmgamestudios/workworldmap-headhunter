@@ -14,5 +14,26 @@ npm run dev     # geliştirme
 npm run build   # tip kontrolü + üretim derlemesi
 ```
 
+## Cloudflare proxy (OSRM + geocoding)
+
+`worker/` içindeki Cloudflare Worker, uygulamanın rota ve adres sorgularını cache'leyip korur:
+`GET /api/route`, `/api/trip`, `/api/geocode` (CORS allowlist, koordinat/sorgu doğrulama, Cache API, opsiyonel IP başına rate limit).
+
+```bash
+cd worker && npm install
+# wrangler.toml: ALLOWED_ORIGINS (uygulama adresiniz), USER_AGENT (iletişim e-postası), üretimde OSRM_URL
+npx wrangler login && npm run deploy
+```
+
+Ardından uygulamayı proxy'ye bağlayın (`.env` veya Cloudflare Pages değişkeni): `VITE_API_BASE=https://teknodoz-hmap-proxy.<hesap>.workers.dev`.
+Değişken boşsa uygulama doğrudan genel demo sunucularını kullanır (yalnızca geliştirme).
+Üretim için kendi OSRM'inizi (Docker: `ghcr.io/project-osrm/osrm-backend`) `OSRM_URL`'e verin; genel demo sunucusunun kullanım koşulları ticari trafiğe uygun değildir.
+
+## Supabase (ekip çalışması temeli)
+
+`supabase/migrations/` ekip çalışma alanı şemasını içerir: `teams`, `team_members` (owner/editor/viewer), `places`, `routes` ve RLS politikaları.
+Kayıt kimlikleri UUID'dir, yerel `.hmap` verisi doğrudan eşlenebilir. RLS senaryoları (yabancı erişimi, izleyici yazma, yetki yükseltme, forged owner) PGlite ile test edildi.
+Henüz uygulamaya bağlı değildir: bir sonraki sprint = giriş (Supabase Auth) + `places`/`routes` senkronu + Realtime.
+
 Notlar: `.xls` ve `.kmz` desteklenmez (xlsx/csv/kml olarak kaydedin). `maps.app.goo.gl` kısa linkleri tarayıcıdan çözülemez; tam URL gerekir.
 Genel OSRM ve Nominatim sunucuları demo amaçlıdır; yoğun kullanımda kendi OSRM'inizi (`src/lib/routing.ts`) kullanın.
